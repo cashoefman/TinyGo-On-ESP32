@@ -232,24 +232,54 @@ mkdir -p ~/Projects/MyGoProjects/blinkblue
 cd ~/Projects/MyGoProjects/blinkblue
 ```
 
-There is an example in the TinyGoo examples directory but that doesn't work with the ESP32 board I am using but here is some code that will work with the majority of the ESP32 dev board I have come across. You might need to update the PIN number to represent the correct pin on your board.
+There is an example in the TinyGo /examples directory but that doesn't work with the ESP32 board I am using. But here is some code that will work with the majority of the ESP32 dev board I have come across. You might need to update the PIN number to represent the correct pin on your board.
 
 ```
-wget https://github.com/cashoefman/Setup/blob/75024ed6e9259a515d704306ce259eb99b583765/Examples/blinkblue.go
+package main
+
+import (
+	"machine"
+	"time"
+)
+
+func main() {
+	// On board LED is connected to GPIO 2
+	led := machine.Pin(2)
+	// Configure PIN as output
+	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
+
+	// Infinite main loop
+	for {
+		// Turn LED off
+		led.Low()
+		// Wait for 1 second
+		time.Sleep(time.Millisecond * 1000)
+		// Turn LED on
+		led.High()
+		// Wait for 1 second
+		time.Sleep(time.Millisecond * 1000)
+	}
+}
 ```
 
-Now we are ready to flash the go file to the board. We'll set the path to the ESP32 binaries first.
+Download the file from here:
+
+```
+https://github.com/cashoefman/TinyGo-On-ESP32/blob/main/Examples/Blink-Blue/blinkblue.go
+```
+
+Now we are almost ready to flash the go file to the board. We'll set the path to the ESP32 binaries first.
 
 ```
 export PATH="$PATH:$HOME/.espressif/tools/xtensa-esp32-elf/esp-2020r3-8.4.0/xtensa-esp32-elf/bin"
 ```
-Now connect your ESP32 to a USB port on your Raspberry Pi so we can figure out the port that it is connected to and set that value in the `SERIALPORT` variable.
+And connect the ESP32 to a USB port on your Raspberry Pi so we can figure out the port that it is connected to and set that value in the `SERIALPORT` variable.
 
 ```
 ls /dev/ | grep -i "tty" | grep -i "usb"
 export SERIALPORT="/dev/ttyUSB0"
 ```
-You can test that this work by querying the board with:
+Now you can test that this works by querying the ESP32 board with:
 
 ```
 esptool.py --port $SERIALPORT flash_id
@@ -262,7 +292,7 @@ sudo usermod -a -G dialout $USER
 sudo chmod a+rw /dev/ttyUSB0
 ```
 
-And now.... we will flash the code to the ESP32. If all works out as planned the LED on your ESP32 will then start flashing!
+And now.... let's flash the code to the ESP32. If all works out as planned the LED on your ESP32 will start flashing in just a few seconds!
 
 ```
 tinygo flash -target=esp32 -port=$SERIALPORT blinkblue.go
