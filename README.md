@@ -143,7 +143,7 @@ network:
 
 After another `sudo reboot` you can now configure your wireless networks from the wireless network widget in Ubuntu Desktop!
 
-YAY! have a working Ubuntu Desktop. Let's get some development tools setup shall we? First let's add some path settings:
+YAY! we have a working Ubuntu Desktop. Let's get some development tools setup shall we? First let's add some path settings:
 
 ```
 echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.profile
@@ -174,7 +174,7 @@ You can read a little more about that [here](https://linuxconfig.org/ubuntu-20-0
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ```
 
-Now we are off to the races, lets get the ESP-IDF installed! I am going to install v4.2 you might want to install something else. If so check out the [Espressif website](https://docs.espressif.com/projects/esp-idf/en/v4.2/esp32/get-started/index.html#linux-and-macos) for more information.
+Now we are off to the races, lets get the ESP-IDF installed! I am going to install v4.2 you might want to install something else. If so, check out the [Espressif website](https://docs.espressif.com/projects/esp-idf/en/v4.2/esp32/get-started/index.html#linux-and-macos) for more information.
 
 ```
 mkdir ~/esp
@@ -184,23 +184,27 @@ cd ~/esp/esp-idf
 ./install.sh
 ```
 
-You can go have a cup of coffee or probably eat a quick dinner, on a Raspberry Pi this is going to take a while. Once  ESP-IDF has been installed we need to run `. $HOME/esp/esp-idf/export.sh` to get it ready for use. However at the moment this seems to throw some errors. As we only need the ESP32 binaries for this project we are just going to set the path directly to it so we can use that later.
+You can go have a cup of coffee or probably eat a quick dinner, on a Raspberry Pi this is going to take a while. Once  ESP-IDF has been installed we need to run `. $HOME/esp/esp-idf/export.sh` to get it ready for use. 
+
+However at the moment this seems to throw some errors. As we only need the ESP32 binaries for this project we are just going to set the path directly to it so we can use that later.
 
 ```
 echo 'export PATH="$PATH:$HOME/.espressif/tools/xtensa-esp32-elf/esp-2020r3-8.4.0/xtensa-esp32-elf/bin"' >> ~/.profile
 source ~/.profile
 ```
 
-If it would have worked to run `export.sh`, to make it easier in the future set, an alias for this so the next time you can just type get_idf, again, presuming the errors resolved themselves.
+If it would have worked to run `export.sh`, to make it easier in the future, set an alias for this so the next time you can just type `get_idf`, again, presuming the errors resolved themselves.
 
 ```
 echo 'alias get_idf=". $HOME/esp/esp-idf/export.sh"' >> ~/.profile
 source ~/.profile
 ```
 
-If you do that you can just type get_idf to make get ESP-IDF ready.
+If you do that you can just type `get_idf` to get ESP-IDF ready.
 
-Let's change it up a little, let's use the snap store to install Go! on your Ubuntu Desktop open up software and search for Golang, click install and a few minutes later Go is installed on your Raspberry Pi! Now that seems to install Go however, when I did that, I ran into some issues later on. You might try it but your success might vary.
+Let's change it up a little, let's use the Snap Store to install Go! on your Ubuntu Desktop open up "Software" and search for Golang, click install and a few minutes later Go is installed on your Raspberry Pi! 
+
+Now that seems to install Go however, when I did that, I ran into some issues later on. You might try it but your success might vary.
 
 The alternative method isn't too much more difficult and will get you the latest version from Golang.org. To do that, do this:
 
@@ -208,12 +212,17 @@ The alternative method isn't too much more difficult and will get you the latest
 cd ~/Downloads/
 wget https://golang.org/dl/go1.15.6.linux-armv6l.tar.gz
 sudo tar -C /usr/local -xzf go1.15.6.linux-armv6l.tar.gz
+```
+
+And set the required Path settings:
+
+```
 echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.profile
 echo 'export GOPATH=$HOME/go' >> ~/.profile
 source ~/.profile
 ```
 
-In the example above used "go1.15.6.linux-armv6l" by the time you read this there might be a newer version so check the [Golang](https://golang.org) website for the latest and greatest.
+In the example above I used "go1.15.6.linux-armv6l", by the time you read this there might be a newer version, so check the [Golang](https://golang.org) website for the latest and greatest.
 
 Now we are going to install TinyGo! The Snap Store doesn't have it so we will install that manually too. Again I am using the latest version from the [TinyGo](https://tinygo.org) website for the latest ARM32 package.
 
@@ -232,7 +241,9 @@ mkdir -p ~/Projects/MyGoProjects/blinkblue
 cd ~/Projects/MyGoProjects/blinkblue
 ```
 
-There is an example in the TinyGo /examples directory but that doesn't work with the ESP32 board I am using. But here is some code that will work with the majority of the ESP32 dev board I have come across. You might need to update the PIN number to represent the correct pin on your board.
+There is an example that comes with the TinyGo package you setup in the previous step, you can find it in the TinyGo/examples directory however, that doesn't work with the ESP32 board I am using. 
+
+But here is some code that will work with the majority of the ESP32 dev board I have come across. You might need to update the 'Pin' number to represent the correct pin on your board.
 
 ```
 package main
@@ -292,7 +303,7 @@ sudo usermod -a -G dialout $USER
 sudo chmod a+rw /dev/ttyUSB0
 ```
 
-And now.... let's flash the code to the ESP32. If all works out as planned the LED on your ESP32 will start flashing in just a few seconds!
+And now.... let's flash the code to the ESP32. If all works out as planned the LED on your ESP32 will start flashing in just a few seconds from now!
 
 ```
 tinygo flash -target=esp32 -port=$SERIALPORT blinkblue.go
